@@ -1,5 +1,6 @@
 package com.example.crudmahasiswa.services;
 
+import com.example.crudmahasiswa.model.dataDashboard;
 import com.example.crudmahasiswa.model.dataMahasiswa;
 import com.example.crudmahasiswa.model.resultResponse;
 
@@ -31,4 +32,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("delete.php")
     Call<resultResponse> delete(@Field("id") String id);
+
+    @GET("dashboard.php")
+    Call<dataDashboard> getdataDasboard();
 }
