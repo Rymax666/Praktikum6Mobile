@@ -1,6 +1,7 @@
 package com.example.crudmahasiswa.adapter;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,6 +94,12 @@ public class ReadAdapter extends RecyclerView.Adapter<ReadAdapter.ViewHolder> {
     }
 
     private void deleteData(String id) {
+        ProgressDialog dialog;
+        dialog = new ProgressDialog(view.getContext());
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading ...");
+        dialog.show();
+
         ApiService apiService;
 
         apiService = ApiClient.getClient().create(ApiService.class);
@@ -104,22 +111,31 @@ public class ReadAdapter extends RecyclerView.Adapter<ReadAdapter.ViewHolder> {
                 String message = response.body().getMessage();
                 if (status.equals("ok")) {
                     Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                     // kalau sukses pindah ke fragment utama
                     AppCompatActivity activity = (AppCompatActivity) view.getContext();
                     ((BottomNavigationView) activity.findViewById(R.id.nav_view)).setSelectedItemId(R.id.navigation_insert);
                 } else {
+                    dialog.dismiss();
                     Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<resultResponse> call, Throwable t) {
+                dialog.dismiss();
                 Toast.makeText(view.getContext(), "GAGAL DELETE", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void updateData(resultMahasiswa resultMahasiswa) {
+        ProgressDialog dialog;
+        dialog = new ProgressDialog(view.getContext());
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading ...");
+        dialog.show();
+
         ApiService apiService;
 
         apiService = ApiClient.getClient().create(ApiService.class);
@@ -133,16 +149,19 @@ public class ReadAdapter extends RecyclerView.Adapter<ReadAdapter.ViewHolder> {
                 String message = response.body().getMessage();
                 if (status.equals("ok")) {
                     Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                     // kalau sukses pindah ke fragment utama
                     AppCompatActivity activity = (AppCompatActivity) view.getContext();
                     ((BottomNavigationView) activity.findViewById(R.id.nav_view)).setSelectedItemId(R.id.navigation_insert);
                 } else {
+                    dialog.dismiss();
                     Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<resultResponse> call, Throwable t) {
+                dialog.dismiss();
                 Toast.makeText(view.getContext(), "GAGAL DIUPDATE", Toast.LENGTH_SHORT).show();
             }
         });

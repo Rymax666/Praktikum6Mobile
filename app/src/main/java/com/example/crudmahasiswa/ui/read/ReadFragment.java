@@ -1,5 +1,6 @@
 package com.example.crudmahasiswa.ui.read;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +29,12 @@ public class ReadFragment extends Fragment {
     private RecyclerView recyclerView;
     private ApiService apiService;
     private ArrayList<resultMahasiswa> resultMahasiswas;
+    ProgressDialog dialog;
+    View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_read, container, false);
+        root = inflater.inflate(R.layout.fragment_read, container, false);
         recyclerView = root.findViewById(R.id.rv_dataMahasiswa);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -42,12 +45,18 @@ public class ReadFragment extends Fragment {
     }
 
     private void loadData() {
+        dialog = new ProgressDialog(root.getContext());
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading ...");
+        dialog.show();
+
         apiService = ApiClient.getClient().create(ApiService.class);
         apiService.getdataMahasiswa().enqueue(new Callback<dataMahasiswa>() {
             @Override
             public void onResponse(Call<dataMahasiswa> call, Response<dataMahasiswa> response) {
                 resultMahasiswas = new ArrayList<>();
                 if (response.isSuccessful()) {
+                    dialog.dismiss();
                     for (resultMahasiswa resultMahasiswa : response.body().getResult()) {
                         resultMahasiswas.add(resultMahasiswa);
                     }
@@ -58,7 +67,7 @@ public class ReadFragment extends Fragment {
 
             @Override
             public void onFailure(Call<dataMahasiswa> call, Throwable t) {
-
+                dialog.dismiss();
             }
         });
     }

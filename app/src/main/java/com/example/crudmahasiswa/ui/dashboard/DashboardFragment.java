@@ -1,5 +1,6 @@
 package com.example.crudmahasiswa.ui.dashboard;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,11 +31,13 @@ public class DashboardFragment extends Fragment {
     private TextView tvTotalMahasiswa, tvMahasiswaTeknik, tvMahasiswaInformatika,
             tvLastUpdateTime, tvLastUpdateDate;
     private ApiService apiService;
+    private ProgressDialog dialog;
+    View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         loadData();
 
@@ -42,11 +45,18 @@ public class DashboardFragment extends Fragment {
     }
 
     private void loadData() {
+        dialog = new ProgressDialog(root.getContext());
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading ...");
+        dialog.show();
+
         apiService = ApiClient.getClient().create(ApiService.class);
         apiService.getdataDasboard().enqueue(new Callback<dataDashboard>() {
             @Override
             public void onResponse(Call<dataDashboard> call, Response<dataDashboard> response) {
                 if (response.isSuccessful()) {
+                    dialog.dismiss();
+
                     tvTotalMahasiswa.setText(response.body().getResult().getTotalMahasiswa());
                     tvMahasiswaTeknik.setText(response.body().getResult().getMahasiswaTeknik());
                     tvMahasiswaInformatika.setText(response.body().getResult().getMahasiswaInformatika());
@@ -62,7 +72,7 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onFailure(Call<dataDashboard> call, Throwable t) {
-
+                dialog.dismiss();
             }
         });
     }
