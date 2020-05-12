@@ -17,9 +17,4 @@
         android:label="@string/title_read"
         tools:layout="@layout/fragment_read" />
 
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.crudmahasiswa.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
 </navigation>
